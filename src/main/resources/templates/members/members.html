@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To do Calendar</title>
+</head>
+
+<body>
+    <h2>회원 목록</h2>
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th th:text="'ID'">id</th>
+                    <th th:text="'로그인 ID'">login id</th>
+                    <th th:text="'이름'">name</th>
+                    <th th:text="'상세 정보'">detail</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr th:each="member : ${members}">
+                    <td th:text="${member.id}">id</td>
+                    <td th:text="${member.loginId}">login id</td>
+                    <td th:text="${member.name}">name</td>
+                    <td>
+                        <a th:href="@{/members/{memberId}(memberId=${member.id})}">detail</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <div>
+        <button th:text="'홈'" th:onclick="|location.href='@{/}'|">
+            홈
+        </button>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To do Calendar</title>
+</head>
+
+<body>
+    <div>
+        <h2 th:text="'회원 가입'">join</h2>
+    </div>
+
+    <div>
+        <form th:action th:object="${member}" method="post">
+            <!-- 글로벌 오류가 있을 시 오류 메세지 출력 -->
+            <div th:if="${#fields.hasGlobalErrors()}">
+                <p th:each="err : ${#fields.globalErrors()}" th:text="${err}">
+                    error messages
+                </p>
+            </div>
+
+            <div>
+                <label for="loginId" th:text="'아이디'"> login id</label>
+                <input type="text" th:field="*{loginId}" th:errorclass="field-error" placeholder="아이디를 입력하세요.">
+                <div class="field-error" th:errors="*{loginId}">
+                    id error
+                </div>
+            </div>
+
+            <div>
+                <label for="password" th:text="'비밀번호'"> password </label>
+                <input type="password" th:field="*{password}" th:errorclass="field-error" placeholder="비밀번호를 입력하세요.">
+                <div class="field-error" th:errors="*{password}">
+                    password error
+                </div>
+            </div>
+
+            <div>
+                <label for="name" th:text="'이름'"> name </label>
+                <input type="text" th:field="*{name}" th:errorclass="field-error" placeholder="이름을 입력하세요.">
+                <div class="field-error" th:errors="*{name}">
+                    name error
+                </div>
+            </div>
+            
+            <div>
+                <button type="submit" th:text="'회원 가입'">
+                    회원가입
+                </button>
+    
+                <button th:text="'홈'" th:onclick="|location.href='@{/home/noLogin}'|">
+                    홈
+                </button>
+            </div>
+        </form>
+    </div>
+
+
+</body>
+
+</html>

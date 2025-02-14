@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To do Calendar</title>
+</head>
+
+<body>
+    <h1>To do Calendar</h1>
+    
+    <h2>Home</h2>
+
+    <button th:text="회원가입" th:onclick="|location.href='@{/members/join}'|">
+        join
+    </button>
+
+    <button th:text="로그인" th:onclick="|location.href='@{/login/login}'|">
+        login
+    </button>
+</body>
+
+</html>

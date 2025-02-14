@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To do Calendar</title>
+</head>
+
+<body>
+    <div th:object="${member}">
+        <h2 th:if="${param.isNew}" th:text="'회원 가입을 축하합니다!'"></h2>
+        <h2>회원 정보</h2>
+        
+        <label for="loginId" th:text="'로그인 ID'">ID</label>
+        <input type="text" th:field="*{loginId}" readonly>
+
+        <label for="name" th:text="'이름'">Name</label>
+        <input type="text" th:field="*{name}" readonly>
+
+        <!-- 추후에 일정 개수 추가하는 로직 구현 생각 중 -->
+        
+    </div>
+
+    <div>
+        <!-- 버튼 두 개 초과해서 홈화면으로 가는 버튼, 로그인 창으로 가는 버튼 추가하기 -->
+        <!-- 회원인 경우는 홈 화면으로 가는 버튼 하나만 추가 -->
+        <button th:text="'홈'" th:onclick="|location.href='@{/}'|">
+            홈
+         </button>
+
+         <button th:if="${param.isNew}" th:text="'로그인'" th:onclick="|location.href='@{/login/login}'|">
+            로그인
+         </button>
+
+         <!-- 나중에 admin 은 회원 목록으로 돌아갈 수 있는 버튼 추가하기 -->
+    </div>
+</body>
+
+</html>
