@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/header :: head}"></head>
+<body class="container text-center mt-5">
+    <h1 class="text-danger">401 Unauthorized</h1>
+    <p class="lead" th:text="${errorMessage}">관리자 권한이 필요합니다.</p>
+    <button class="btn btn-primary mt-3" th:onclick="|location.href='@{/}'|">홈으로 이동</button>
+</body>
+</html>

@@ -1,23 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To do Calendar</title>
-</head>
+<head th:replace="~{layout/header :: head}"></head>
 
-<body>
-    <h1>To do Calendar</h1>
+<body class="container">
+    <h1 class="text-center mt-4">To do Calendar</h1>
     
-    <h2>Home</h2>
+    <h2 class="text-center">Home</h2>
 
-    <button th:text="회원가입" th:onclick="|location.href='@{/members/join}'|">
-        join
-    </button>
-
-    <button th:text="로그인" th:onclick="|location.href='@{/login/login}'|">
-        login
-    </button>
+    <div class="d-flex justify-content-center mt-4">
+        <button class="btn btn-primary mx-2" th:text="'회원가입'" th:onclick="|location.href='@{/members/join}'|"></button>
+        <button class="btn btn-success mx-2" th:text="'로그인'" th:onclick="|location.href='@{/login}'|"></button>
+    </div>
 </body>
-
 </html>

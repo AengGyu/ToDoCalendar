@@ -1,4 +1,4 @@
-package com.aenggyu.todoCalendar.repository;
+package com.aenggyu.todoCalendar.repository.member;
 
 import com.aenggyu.todoCalendar.domain.member.Member;
 

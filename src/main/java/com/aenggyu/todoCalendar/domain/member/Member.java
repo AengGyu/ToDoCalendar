@@ -15,10 +15,12 @@ public class Member {
     private String loginId;
     private String password;
     private String name;
+    private Role role;
 
-    public Member(String loginId, String password, String name) {
+    public Member(String loginId, String password, String name, Role role) {
         this.loginId = loginId;
         this.password = password;
         this.name = name;
+        this.role = role;
     }
 }

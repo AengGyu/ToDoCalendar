@@ -1,13 +1,27 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To do Calendar</title>
-</head>
-    
-<body>
-    
-</body>
+<head th:replace="~{layout/header :: head}"></head>
 
+<body class="container">
+    <h1 class="text-center mt-4">To do Calendar</h1>
+    
+    <h2 class="text-center">Home</h2>
+
+    <h2 class="text-center text-primary" th:text="|안녕하세요. ${member.name} 님|"></h2>
+
+    <div class="d-flex justify-content-center mt-4">
+        <button class="btn btn-outline-primary mx-2" th:text="'내 정보 보기'" 
+                th:onclick="|location.href='@{/members/{memberId}(memberId=${member.id})}'|"></button>
+
+        <form th:action="@{/logout}" method="post">
+            <button class="btn btn-danger mx-2" type="submit">로그아웃</button>
+        </form>
+    </div>
+
+    <!-- 관리자만 볼 수 있는 버튼 -->
+    <div class="d-flex justify-content-center mt-4" th:if="${member.role.name() == 'ADMIN'}">
+        <button class="btn btn-warning mx-2" th:text="'회원 목록'" 
+                th:onclick="|location.href='@{/members}'|">member list</button>
+    </div>
+</body>
 </html>

@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/header :: head}"></head>
+<body class="container text-center mt-5">
+    <h1 class="text-danger">404 Not Found</h1>
+    <p class="lead" th:text="${errorMessage}">요청하신 페이지를 찾을 수 없습니다.</p>
+    <button class="btn btn-primary mt-3" th:onclick="|location.href='@{/}'|">홈으로 이동</button>
+</body>
+</html>
