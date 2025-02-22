@@ -18,4 +18,10 @@ public class GlobalExceptionHandler {
         model.addAttribute("errorMessage", e.getMessage());
         return "error/401";
     }
+
+    @ExceptionHandler(EventNotFoundException.class)
+    public String handleEventNotFoundException(EventNotFoundException e, Model model) {
+        model.addAttribute("errorMessage", e.getMessage());
+        return "error/404";
+    }
 }

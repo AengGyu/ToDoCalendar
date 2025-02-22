@@ -23,6 +23,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
+    // 특정 회원 조회
     @GetMapping("/{memberId}")
     public String member(@PathVariable Long memberId, Model model) {
         Member member = memberService.findMemberById(memberId);
@@ -32,6 +33,7 @@ public class MemberController {
         return "members/member";
     }
 
+    // 전체 회원 조회
     @GetMapping
     public String members(Model model) {
         List<Member> members = memberService.findAllMembers();
@@ -44,14 +46,16 @@ public class MemberController {
         return "members/members";
     }
 
+    // 회원 가입 폼으로 이동
     @GetMapping("/join")
-    public String join(Model model) {
+    public String joinForm(Model model) {
         model.addAttribute("member", new MemberJoinDto());
         return "members/join";
     }
 
+    // 회원 가입
     @PostMapping("/join")
-    public String joinForm(@Validated @ModelAttribute("member") MemberJoinDto memberJoinDto,
+    public String join(@Validated @ModelAttribute("member") MemberJoinDto memberJoinDto,
                            BindingResult bindingResult,
                            RedirectAttributes redirectAttributes) {
 
@@ -72,6 +76,7 @@ public class MemberController {
         return "redirect:/members/welcome/{memberId}";
     }
 
+    // 회원 가입 성공 시 이동
     @GetMapping("/welcome/{memberId}")
     public String welcome(@PathVariable Long memberId, Model model) {
         Member member = memberService.findMemberById(memberId);
@@ -80,7 +85,7 @@ public class MemberController {
         return "members/welcome";
     }
 
-    private static MemberDto getMemberResponseDto(Member member) {
+    private MemberDto getMemberResponseDto(Member member) {
         return new MemberDto(member.getLoginId(), member.getName(), member.getRole());
     }
 }

@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * 로그인 한 회원의 정보를 넘겨주는 dto, 세션에서 조회
+ */
 @Getter
 @Setter
 @AllArgsConstructor

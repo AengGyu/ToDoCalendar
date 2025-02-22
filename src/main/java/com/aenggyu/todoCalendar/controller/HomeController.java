@@ -28,4 +28,13 @@ public class HomeController {
 
         return "home/loggedIn";
     }
+
+    @GetMapping("/calendar")
+    public String calendarView(HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession(false);
+        LoginMemberDto member = (LoginMemberDto) session.getAttribute(SessionConst.LOGIN_SESSION);
+        model.addAttribute("member", member);
+
+        return "events/calendar";
+    }
 }

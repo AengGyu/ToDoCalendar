@@ -24,6 +24,6 @@ public class WebConfig implements WebMvcConfigurer {
 
         registry.addInterceptor(new AdminCheckInterceptor())
                 .order(2)
-                .addPathPatterns("/members");
+                .addPathPatterns("/members", "/events/all");
     }
 }

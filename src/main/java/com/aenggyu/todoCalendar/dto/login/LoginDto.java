@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * 로그인 폼에 사용되는 dto
+ */
 @Getter
 @Setter
 @AllArgsConstructor
