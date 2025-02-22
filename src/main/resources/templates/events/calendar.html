@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>To do Calendar</title>
+
+    <!-- ✅ FullCalendar CSS & JS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/ko.js"></script>
+
+    <!-- ✅ Bootstrap 5 (CDN) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        #calendar {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .fc-toolbar-title {
+            font-size: 2rem;
+            font-weight: 600;
+        }
+        .fc-button-primary {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+        /* ✅ 기본 버튼 스타일 */
+        .btn-custom, .btn-primary, .btn-secondary {
+            width: 200px;
+            margin: 10px 0;
+            background-color: white;
+            border: 2px solid #0d6efd;
+            color: #0d6efd;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .btn-custom:hover, .btn-primary:hover, .btn-secondary:hover {
+            background-color: #0d6efd;
+            color: white;
+            border-color: #0d6efd;
+        }
+        /* ✅ 삭제 버튼은 빨간색 유지 */
+        .btn-danger {
+            width: 200px;
+            margin: 10px 0;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+        .btn-danger:hover {
+            background-color: #bb2d3b;
+        }
+        .error-msg {
+            color: #dc3545;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        .readonly {
+            background-color: #f8f9fa;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+<div class="container py-5">
+    <div class="text-center mb-4">
+        <h1 class="display-5 fw-bold text-primary">📅 To do Calendar</h1>
+        <p class="lead">나의 일정을 간편하게 관리해보세요!</p>
+        <button class="btn btn-custom" onclick="location.href='/'">🏠 홈으로</button>
+    </div>
+
+    <div class="card shadow-lg">
+        <div class="card-body">
+            <div id="calendar"></div>
+        </div>
+    </div>
+</div>
+
+<!-- 📅 일정 추가 모달 -->
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="addForm" novalidate>
+                <div class="modal-header">
+                    <h5 class="modal-title">📝 일정 추가</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">제목</label>
+                        <input type="text" class="form-control" id="addTitle">
+                        <div id="addTitleError" class="error-msg"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">설명</label>
+                        <textarea class="form-control" id="addDescription" rows="3"></textarea>
+                        <div id="addDescriptionError" class="error-msg"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">시작 날짜</label>
+                        <input type="date" class="form-control" id="addStart">
+                        <div id="addStartError" class="error-msg"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">종료 날짜</label>
+                        <input type="date" class="form-control" id="addEnd">
+                        <div id="addEndError" class="error-msg"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">추가하기</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- 📋 일정 상세 모달 (수정 기능 분리) -->
+<div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="detailForm" novalidate>
+                <div class="modal-header">
+                    <h5 class="modal-title">🔎 일정 상세</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="detailId">
+                    <div class="mb-3">
+                        <label class="form-label">제목</label>
+                        <input type="text" class="form-control readonly" id="detailTitle" readonly>
+                        <div id="detailTitleError" class="error-msg"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">설명</label>
+                        <textarea class="form-control readonly" id="detailDescription" rows="3" readonly></textarea>
+                        <div id="detailDescriptionError" class="error-msg"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">시작 날짜</label>
+                        <input type="date" class="form-control readonly" id="detailStart" readonly>
+                        <div id="detailStartError" class="error-msg"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">종료 날짜</label>
+                        <input type="date" class="form-control readonly" id="detailEnd" readonly>
+                        <div id="detailEndError" class="error-msg"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="editEventBtn">수정하기</button>
+                    <button type="submit" class="btn btn-primary d-none" id="saveEventBtn">저장하기</button>
+                    <button type="button" class="btn btn-danger" id="deleteEventBtn">삭제</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ✅ 삭제 확인 모달 추가 -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">⚠️ 삭제 확인</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p>정말 이 일정을 삭제하시겠습니까?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">삭제</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ✅ JavaScript 수정 -->
+<script th:inline="javascript">
+    const memberId = [[${member.id}]];
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const calendarEl = document.getElementById('calendar');
+        const addModal = new bootstrap.Modal(document.getElementById('addModal'));
+        const detailModal = new bootstrap.Modal(document.getElementById('detailModal'));
+        const deleteConfirmModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+        let deleteEventId = null;
+
+        const addForm = document.getElementById('addForm');
+        const detailForm = document.getElementById('detailForm');
+        const editEventBtn = document.getElementById('editEventBtn');
+        const saveEventBtn = document.getElementById('saveEventBtn');
+        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+
+        const clearErrors = (prefix) => {
+            ["Title", "Description", "Start", "End"].forEach(field => {
+                document.getElementById(`${prefix}${field}Error`).textContent = '';
+            });
+        };
+
+        const toggleReadOnly = (isReadOnly) => {
+            ['detailTitle', 'detailDescription', 'detailStart', 'detailEnd'].forEach(id => {
+                const el = document.getElementById(id);
+                el.readOnly = isReadOnly;
+                el.classList.toggle('readonly', isReadOnly);
+            });
+        };
+
+        const handleSubmit = (prefix, method, url, modal) => {
+            const event = {
+                title: document.getElementById(`${prefix}Title`).value,
+                description: document.getElementById(`${prefix}Description`).value,
+                start: document.getElementById(`${prefix}Start`).value,
+                end: document.getElementById(`${prefix}End`).value
+            };
+
+            fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(event)
+            })
+            .then(async response => {
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    Object.entries(errorData).forEach(([field, message]) => {
+                        document.getElementById(`${prefix}${field.charAt(0).toUpperCase() + field.slice(1)}Error`).textContent = message;
+                    });
+                    throw new Error('Validation failed');
+                }
+                return response.json();
+            })
+            .then(() => {
+                calendar.refetchEvents();
+                modal.hide();
+            })
+            .catch(error => console.error('Validation Error:', error));
+        };
+
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'ko',
+            selectable: true,
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            select: function(info) {
+                clearErrors('add');
+                addForm.reset();
+                document.getElementById('addStart').value = info.startStr;
+                document.getElementById('addEnd').value = info.endStr;
+                addModal.show();
+            },
+            eventClick: function(info) {
+                clearErrors('detail');
+                const event = info.event;
+                document.getElementById('detailId').value = event.id;
+                document.getElementById('detailTitle').value = event.title;
+                document.getElementById('detailDescription').value = event.extendedProps.description;
+                document.getElementById('detailStart').value = event.startStr;
+                document.getElementById('detailEnd').value = event.endStr;
+                toggleReadOnly(true);
+                saveEventBtn.classList.add('d-none');
+                editEventBtn.classList.remove('d-none');
+                detailModal.show();
+            },
+            events: `/api/events/${memberId}`
+        });
+
+        addForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            clearErrors('add');
+            handleSubmit('add', 'POST', '/api/events', addModal);
+        });
+
+        editEventBtn.addEventListener('click', function() {
+            toggleReadOnly(false);
+            editEventBtn.classList.add('d-none');
+            saveEventBtn.classList.remove('d-none');
+        });
+
+        detailForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            clearErrors('detail');
+            const id = document.getElementById('detailId').value;
+            handleSubmit('detail', 'PUT', `/api/events/${id}`, detailModal);
+        });
+
+        document.getElementById('deleteEventBtn').addEventListener('click', function() {
+            deleteEventId = document.getElementById('detailId').value;
+            deleteConfirmModal.show();
+        });
+
+        confirmDeleteBtn.addEventListener('click', function() {
+            if (deleteEventId) {
+                fetch(`/api/events/${deleteEventId}`, { method: 'DELETE' })
+                    .then(() => {
+                        calendar.refetchEvents();
+                        deleteConfirmModal.hide();
+                        detailModal.hide();
+                        deleteEventId = null;
+                    })
+                    .catch(error => console.error('Delete Error:', error));
+            }
+        });
+
+        calendar.render();
+    });
+</script>
+</body>
+</html>

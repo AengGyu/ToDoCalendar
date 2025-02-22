@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/header :: head}"></head>
+
+<!-- ✅ 캘린더 페이지와 동일한 스타일 적용 -->
+<style>
+    .custom-card {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 20px;
+        background-color: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .custom-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #0d6efd;
+    }
+    .table th, .table td {
+        text-align: center;
+        vertical-align: middle;
+    }
+    .btn-custom {
+        width: 180px;
+        font-weight: 600;
+        background-color: white;
+        color: #0d6efd;
+        border: 2px solid #0d6efd;
+        transition: all 0.3s ease;
+    }
+    .btn-custom:hover {
+        background-color: #0d6efd;
+        color: white;
+        border-color: #0d6efd;
+    }
+    .btn-danger {
+        width: 100px;
+        transition: all 0.3s ease;
+    }
+    .btn-danger:hover {
+        background-color: #dc3545;
+        border-color: #bb2d3b;
+    }
+</style>
+
+<body class="bg-light">
+<div class="container py-5">
+    <div class="text-center mb-4">
+        <h1 class="custom-title">📅 To do Calendar</h1>
+        <p class="lead">등록된 모든 일정을 한눈에 확인하고 관리하세요.</p>
+        <button class="btn btn-custom mt-3" onclick="location.href='/'">🏠 홈으로</button>
+    </div>
+
+    <div class="custom-card">
+        <table class="table table-hover mt-4" id="eventTable">
+            <thead class="table-dark">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">제목</th>
+                <th scope="col">설명</th>
+                <th scope="col">시작 날짜</th>
+                <th scope="col">종료 날짜</th>
+                <th scope="col">회원 이름</th>
+                <th scope="col">삭제</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="event : ${events}" th:attr="data-id=${event.id}">
+                <td th:text="${event.id}"></td>
+                <td th:text="${event.title}"></td>
+                <td th:text="${event.description}"></td>
+                <td th:text="${event.start}"></td>
+                <td th:text="${event.end}"></td>
+                <td th:text="${event.name}"></td>
+                <td>
+                    <button type="button" class="btn btn-danger delete-btn">삭제</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ✅ JavaScript: 삭제 비동기 처리 -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const table = document.getElementById('eventTable');
+        table.addEventListener('click', function(e) {
+            if (e.target.classList.contains('delete-btn')) {
+                const row = e.target.closest('tr');
+                const eventId = row.getAttribute('data-id');
+
+                if (confirm('정말로 해당 일정을 삭제하시겠습니까?')) {
+                    fetch(`/api/events/${eventId}`, {
+                        method: 'DELETE'
+                    })
+                    .then(response => {
+                        if (!response.ok) throw new Error('삭제 실패');
+                        row.remove();
+                        alert('일정이 성공적으로 삭제되었습니다.');
+                    })
+                    .catch(error => {
+                        console.error('삭제 중 오류 발생:', error);
+                        alert('삭제 중 문제가 발생했습니다.');
+                    });
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>
