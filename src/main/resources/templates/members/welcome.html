@@ -2,20 +2,63 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{layout/header :: head}"></head>
 
-<body class="container">
-    <div class="card mt-5 shadow-sm">
-        <div class="card-body" th:object="${member}">
-            <h2 class="card-title text-center text-primary" th:text="|*{name}님! 회원 가입을 축하합니다! 🎉|"></h2>
-            <p class="text-center">가입이 완료되었습니다. 로그인 후 이용해 주세요.</p>
-            <div class="text-center mt-3">
-                <strong>가입한 아이디:</strong> <span th:text="*{loginId}"></span>
-            </div>
+<style>
+    .custom-card {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 30px;
+        background-color: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .custom-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #0d6efd;
+    }
+    .btn-custom {
+        width: 250px;
+        font-weight: 600;
+        background-color: white;
+        color: #0d6efd;
+        border: 2px solid #0d6efd;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+    .btn-custom:hover {
+        background-color: #0d6efd;
+        color: white;
+        border-color: #0d6efd;
+    }
+    .greeting-text {
+        font-size: 1.5rem;
+        color: #198754;
+        font-weight: 600;
+    }
+</style>
+
+<body class="bg-light">
+<div class="container py-5">
+    <div class="text-center mb-4">
+        <h1 class="custom-title">🎉 회원 가입 완료</h1>
+        <p class="lead">가입을 축하드립니다! 로그인 후 서비스를 이용해 주세요.</p>
+    </div>
+
+    <!-- 📝 회원 정보 카드 -->
+    <div class="custom-card text-center" th:object="${member}">
+        <h2 class="greeting-text" th:text="|*{name}님, 환영합니다! 🎉|"></h2>
+        <p class="mb-4">아래 가입한 아이디로 로그인할 수 있습니다.</p>
+        <div class="border rounded p-3 bg-light">
+            <strong>✅ 가입한 아이디:</strong>
+            <p class="fs-5 fw-semibold mt-2 text-primary" th:text="*{loginId}"></p>
         </div>
     </div>
 
-    <div class="d-flex justify-content-center mt-3">
-        <button class="btn btn-primary mx-2" th:onclick="|location.href='@{/login}'|">로그인</button>
-        <button class="btn btn-secondary mx-2" th:onclick="|location.href='@{/}'|">홈으로</button>
+    <!-- 🔗 버튼: 로그인 & 홈으로 -->
+    <div class="d-flex justify-content-center mt-4">
+        <button class="btn btn-custom mx-2" th:onclick="|location.href='@{/login}'|">🔐 로그인</button>
+        <button class="btn btn-custom mx-2" th:onclick="|location.href='@{/}'|">🏠 홈으로</button>
     </div>
+</div>
 </body>
 </html>

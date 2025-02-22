@@ -1,35 +1,68 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{layout/header :: head}"></head>
 
-<body class="container">
-    <h2 class="text-center mt-4">로그인</h2>
+<style>
+    .custom-card {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 30px;
+        background-color: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .custom-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #0d6efd;
+    }
+    .btn-custom {
+        width: 250px;
+        font-weight: 600;
+        background-color: white;
+        color: #0d6efd;
+        border: 2px solid #0d6efd;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+    .btn-custom:hover {
+        background-color: #0d6efd;
+        color: white;
+        border-color: #0d6efd;
+    }
+</style>
 
-    <div class="card mt-3 shadow-sm">
-        <div class="card-body">
-            <form th:action method="post" th:object="${login}">
-                <div class="alert alert-danger" th:if="${#fields.hasGlobalErrors()}">
-                    <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label fw-bold">아이디</label>
-                    <input type="text" class="form-control" th:field="*{loginId}" th:errorclass="is-invalid" placeholder="아이디를 입력하세요.">
-                    <div class="invalid-feedback" th:errors="*{loginId}"></div>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label fw-bold">비밀번호</label>
-                    <input type="password" class="form-control" th:field="*{password}" th:errorclass="is-invalid" placeholder="비밀번호를 입력하세요.">
-                    <div class="invalid-feedback" th:errors="*{password}"></div>
-                </div>
-
-                <div class="d-flex justify-content-center">
-                    <button type="submit" class="btn btn-primary mx-2">로그인</button>
-                    <button type="button" class="btn btn-secondary mx-2" th:onclick="|location.href='@{/}'|">홈</button>
-                </div>
-            </form>
-        </div>
+<body class="bg-light">
+<div class="container py-5">
+    <div class="text-center mb-4">
+        <h1 class="custom-title">🔐 로그인</h1>
+        <p class="lead">로그인 후 나만의 일정을 확인하세요!</p>
     </div>
+
+    <div class="custom-card text-center">
+        <form th:action method="post" th:object="${login}">
+            <div class="alert alert-danger text-center" th:if="${#fields.hasGlobalErrors()}">
+                <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">아이디</label>
+                <input type="text" class="form-control" th:field="*{loginId}" th:errorclass="is-invalid" placeholder="아이디를 입력하세요.">
+                <div class="invalid-feedback" th:errors="*{loginId}"></div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">비밀번호</label>
+                <input type="password" class="form-control" th:field="*{password}" th:errorclass="is-invalid" placeholder="비밀번호를 입력하세요.">
+                <div class="invalid-feedback" th:errors="*{password}"></div>
+            </div>
+
+            <div class="d-flex justify-content-center flex-column align-items-center">
+                <button type="submit" class="btn btn-custom mb-3">로그인</button>
+                <button type="button" class="btn btn-custom" th:onclick="|location.href='@{/}'|">🏠 홈으로</button>
+            </div>
+        </form>
+    </div>
+</div>
 </body>
 </html>

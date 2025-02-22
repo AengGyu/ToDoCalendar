@@ -1,36 +1,89 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{layout/header :: head}"></head>
 
-<body class="container">
-<h1 class="text-center mt-4">To do Calendar</h1>
+<!-- ✅ 통일된 스타일 적용 -->
+<style>
+    .custom-card {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 30px;
+        background-color: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .custom-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #0d6efd;
+    }
+    .btn-custom {
+        width: 250px;
+        margin-bottom: 15px;
+        font-weight: 600;
+        background-color: white;
+        color: #0d6efd;
+        border: 2px solid #0d6efd;
+        transition: all 0.3s ease;
+    }
+    .btn-custom:hover {
+        background-color: #0d6efd;
+        color: white;
+        border-color: #0d6efd;
+    }
+    .btn-logout {
+        width: 250px;
+        margin-bottom: 15px;
+        font-weight: 600;
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        transition: all 0.3s ease;
+    }
+    .btn-logout:hover {
+        background-color: #bb2d3b;
+        color: white;
+    }
+    .greeting-text {
+        font-size: 1.5rem;
+        color: #198754;
+        font-weight: 600;
+        margin-bottom: 30px;
+    }
+</style>
 
-<h2 class="text-center">Home</h2>
+<body class="bg-light">
+<div class="container py-5">
+    <div class="text-center mb-4">
+        <h1 class="custom-title">📅 To do Calendar</h1>
+        <p class="lead">일정을 효율적으로 관리하고, 필요한 기능을 간편하게 이용하세요!</p>
+    </div>
 
-<h2 class="text-center text-primary" th:text="|안녕하세요. ${member.name} 님|"></h2>
+    <div class="custom-card text-center">
+        <h2 class="greeting-text" th:text="|안녕하세요. ${member.name} 님!|"></h2>
 
-<div class="d-flex justify-content-center mt-4">
-    <button class="btn btn-outline-primary mx-2" th:text="'내 정보 보기'"
-            th:onclick="|location.href='@{/members/{memberId}(memberId=${member.id})}'|"></button>
+        <!-- ✅ 메인 버튼 그룹 (세로 나열, 통일된 스타일) -->
+        <div class="d-flex flex-column align-items-center">
+            <button class="btn btn-custom" th:text="'내 정보 보기'"
+                    th:onclick="|location.href='@{/members/{memberId}(memberId=${member.id})}'|"></button>
 
-    <form th:action="@{/logout}" method="post">
-        <button class="btn btn-danger mx-2" type="submit">로그아웃</button>
-    </form>
-</div>
+            <button class="btn btn-custom" th:text="'내 일정 보기'"
+                    th:onclick="|location.href='@{/event/calendar}'|"></button>
 
-<!-- ⭐ 내 일정 보기 버튼 추가 -->
-<div class="d-flex justify-content-center mt-4">
-    <button class="btn btn-success mx-2" th:text="'내 일정 보기'"
-            th:onclick="|location.href='@{/event/calendar}'|">내 일정 보기</button>
-</div>
+            <form th:action="@{/logout}" method="post">
+                <button class="btn btn-logout" type="submit">로그아웃</button>
+            </form>
 
-<!-- ⭐ 관리자만 볼 수 있는 버튼: 회원 목록 및 모든 일정 보기 -->
-<div class="d-flex justify-content-center mt-4" th:if="${member.role.name() == 'ADMIN'}">
-    <button class="btn btn-warning mx-2" th:text="'회원 목록'"
-            th:onclick="|location.href='@{/members}'|">회원 목록</button>
+            <!-- ✅ 관리자만 볼 수 있는 기능 -->
+            <div th:if="${member.role.name() == 'ADMIN'}" class="w-100 mt-3">
+                <button class="btn btn-custom" th:text="'회원 목록'"
+                        th:onclick="|location.href='@{/members}'|">회원 목록</button>
 
-    <button class="btn btn-info mx-2" th:text="'모든 일정 보기'"
-            th:onclick="|location.href='@{/event/all}'|">모든 일정 보기</button>
+                <button class="btn btn-custom" th:text="'모든 일정 보기'"
+                        th:onclick="|location.href='@{/event/all}'|">모든 일정 보기</button>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

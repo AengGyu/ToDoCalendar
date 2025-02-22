@@ -1,38 +1,83 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{layout/header :: head}"></head>
 
-<body class="container">
-    <div class="card mt-5 shadow-sm">
-        <div class="card-body" th:object="${member}">
-            <h2 class="card-title text-center text-primary" th:if="${param.isNew}">
-                회원 가입을 축하합니다! 🎉
-            </h2>
-            <h2 class="card-title text-center">회원 정보</h2>
+<!-- ✅ 캘린더 페이지와 완전히 일치하는 버튼 스타일 적용 -->
+<style>
+    .custom-card {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 30px;
+        background-color: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .custom-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #0d6efd;
+    }
+    /* ✅ 기본 버튼: 하얀색 배경 → 호버 시 파란색 배경 */
+    .btn-custom {
+        width: 250px;
+        font-weight: 600;
+        background-color: white;
+        color: #0d6efd;
+        border: 2px solid #0d6efd;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+    .btn-custom:hover {
+        background-color: #0d6efd;
+        color: white;
+        border-color: #0d6efd;
+    }
+    /* 🔒 로그아웃 버튼 */
+    .btn-logout {
+        width: 250px;
+        font-weight: 600;
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+    .btn-logout:hover {
+        background-color: #bb2d3b;
+        color: white;
+    }
+</style>
 
+<body class="bg-light">
+<div class="container py-5">
+
+    <div class="custom-card">
+        <div class="card-body" th:object="${member}">
+            <!-- 🆔 로그인 ID -->
             <div class="mb-3">
                 <label class="form-label fw-bold">로그인 ID</label>
                 <input type="text" class="form-control" th:field="*{loginId}" readonly>
             </div>
 
+            <!-- 🏷️ 이름 -->
             <div class="mb-3">
                 <label class="form-label fw-bold">이름</label>
                 <input type="text" class="form-control" th:field="*{name}" readonly>
             </div>
-
-            <!-- 추후 일정 개수 추가하는 로직 구현 가능 -->
         </div>
     </div>
 
-    <div class="d-flex justify-content-center mt-3">
-        <button class="btn btn-secondary mx-2" th:text="'홈'" th:onclick="|location.href='@{/}'|">home</button>
-        <button class="btn btn-primary mx-2" th:if="${param.isNew}" th:text="'로그인'" th:onclick="|location.href='@{/login}'|">login</button>
-        <!-- ✅ 관리자(ADMIN)만 '회원 목록' 버튼 보이기 -->
-        <button class="btn btn-warning mx-2"
-        th:if="${session != null and session.loginSession != null and session.loginSession.role.name() == 'ADMIN'}"
-        th:text="'회원 목록'"
-        th:onclick="|location.href='@{/members}'|">
-</button>
+    <!-- 🔘 버튼 영역 (완전히 통일된 색상과 디자인 적용) -->
+    <div class="d-flex justify-content-center flex-wrap gap-3 mt-4">
+        <button class="btn btn-custom" th:text="'🏠 홈으로'" th:onclick="|location.href='@{/}'|"></button>
+
+        <!-- 🛡️ 관리자 전용 버튼 -->
+        <button class="btn btn-custom"
+                th:if="${session != null and session.loginSession != null and session.loginSession.role.name() == 'ADMIN'}"
+                th:text="'📋 회원 목록'"
+                th:onclick="|location.href='@{/members}'|">
+        </button>
     </div>
+</div>
 </body>
 </html>
