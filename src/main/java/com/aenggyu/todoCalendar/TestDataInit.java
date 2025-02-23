@@ -7,7 +7,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-//@Component
+@Component
 @RequiredArgsConstructor
 public class TestDataInit {
 
@@ -15,10 +15,10 @@ public class TestDataInit {
 
     @PostConstruct
     public void init() {
-        Member admin = new Member("admin", "admin!", "admin", Role.ADMIN);
-        Member test = new Member("test", "test!", "test", Role.USER);
+        if (memberService.findMemberByLoginId("admin").isEmpty()) {
+            Member admin = new Member("admin", "admin!", "관리자", Role.ADMIN);
+            memberService.join(admin);
+        }
 
-        memberService.join(admin);
-        memberService.join(test);
     }
 }
