@@ -65,6 +65,62 @@
             background-color: #f8f9fa;
             pointer-events: none;
         }
+
+        /* 날짜 및 요일 밑줄 제거 */
+        .fc-daygrid-day-number,
+        .fc-col-header-cell-cushion {
+        text-decoration: none !important;
+        }
+
+        /* 요일과 날짜의 링크 스타일 제거 */
+        .fc-daygrid-day-number a,
+        .fc-col-header-cell-cushion a {
+        color: inherit;
+        text-decoration: none !important;
+        }
+
+        /* 호버 시에도 밑줄 제거 */
+        .fc-daygrid-day-number a:hover,
+        .fc-col-header-cell-cushion a:hover {
+        text-decoration: none !important;
+        }
+
+        /* 🔄 달 이동 버튼 위치 및 스타일 수정 */
+        .fc .fc-button.fc-prev-button,
+        .fc .fc-button.fc-next-button {
+        background-color: white !important;
+        border: 2px solid #0d6efd !important;
+        color: #0d6efd !important;
+        box-shadow: none !important;
+        border-radius: 50% !important;
+        transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        width: 45px !important;
+        height: 45px !important;
+        font-size: 1.5rem !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        position: absolute !important;
+        top: 20px !important;
+        }
+
+        /* 🔄 왼쪽 화살표 위치 */
+        .fc .fc-button.fc-prev-button {
+        left: 30px !important;
+        }
+
+        /* 🔄 오른쪽 화살표 위치 */
+        .fc .fc-button.fc-next-button {
+        right: 30px !important;
+        }
+
+        /* 🔄 호버 효과 (파란색으로 전환) */
+        .fc .fc-button.fc-prev-button:hover,
+        .fc .fc-button.fc-next-button:hover {
+        background-color: #0d6efd !important;
+        color: white !important;
+        border-color: #0d6efd !important;
+        }
     </style>
 </head>
 
@@ -249,10 +305,12 @@
             locale: 'ko',
             selectable: true,
             headerToolbar: {
-                left: 'prev,next today',
+                left: 'prev', // 🔄 달 이동 버튼만 표시
                 center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                right: 'next'          // ✅ 월/주/일 버튼 제거
             },
+            fixedWeekCount: false,  // ✅ 월별로 주 수가 유동적으로 표시
+            showNonCurrentDates: false, // ✅ 현재 월의 날짜만 표시
             select: function(info) {
                 clearErrors('add');
                 addForm.reset();

@@ -1,5 +1,6 @@
 package com.aenggyu.todoCalendar.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MemberNotFoundException.class)
@@ -29,6 +31,14 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public ResponseEntity<Map<String, String>> handleApiValidationException(ApiValidationException e) {
         Map<String, String> response = new HashMap<>(e.getErrorMap());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(InvalidDateException.class)
+    public ResponseEntity<Map<String,String>> handleInvalidDateException(InvalidDateException e) {
+        log.info("InvalidDateException, {}", e.getMessage());
+        Map<String, String> response = new HashMap<>();
+        response.put("end", e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
